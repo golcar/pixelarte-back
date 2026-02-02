@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload, JwtPayload as JwtLibPayload} from "jsonwebtoken";
 
-interface JwtPayload {
-    sub: number;
+interface AppJwtPayload extends JwtLibPayload {
+    id: number;
     email: string;
 }
+
 
 export function authMiddleware(
     req: Request,
