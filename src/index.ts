@@ -1,0 +1,39 @@
+import express from "express";
+import cors from "cors";
+import { AppDataSource } from "./config/data-source";
+import userController from "./controllers/user.controller";
+import authController from "./controllers/auth.controller";
+import clientController from "./controllers/client.controller";
+import productController from "./controllers/product.controller";
+import orderController from "./controllers/order.controller";
+import purchaseOrderController from "./controllers/purchase-order-item.controller";
+
+
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/health", (_, res) => {
+    res.json({ status: "UP" });
+});
+
+AppDataSource.initialize()
+    .then(async () => {
+        console.log("✅ Base de datos conectada");
+        app.use("/users", userController);
+        app.use("/auth", authController);
+        app.use("/clients", clientController);
+        app.use("/products", productController);
+        app.use("/orders", orderController);
+        app.use("/purchase-orders", purchaseOrderController);
+
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`🔥 Server corriendo en http://localhost:${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error("❌ Error al iniciar la app", error);
+    });
