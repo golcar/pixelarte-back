@@ -12,7 +12,13 @@ import purchaseOrderController from "./controllers/purchase-order-item.controlle
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://localhost:4200",
+        "https://pixelarte-front.vercel.app"
+    ],
+    credentials: true
+}));
 app.use(express.json());
 
 app.get("/health", (_, res) => {
