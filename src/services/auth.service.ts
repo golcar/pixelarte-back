@@ -1,4 +1,4 @@
-import { UserRepository } from "../repositories/user.repository";
+import {UserRepository} from "../repositories/user.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -13,20 +13,18 @@ class AuthService {
         const JWT_SECRET = process.env.JWT_SECRET as string;
         const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN as string;
 
-        const token = jwt.sign(
-            { sub: user.id, email: user.email, role: user.role },
-            JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN }
-        );
+        const secret = process.env.JWT_SECRET as string;
 
-        return {
-            token,
-            user: {
+        return jwt.sign(
+            {
                 id: user.id,
-                name: user.name,
                 email: user.email,
             },
-        };
+            secret,
+            {
+                expiresIn: "8h",
+            }
+        );
     }
 }
 
