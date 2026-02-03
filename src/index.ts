@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { AppDataSource } from "./config/data-source";
+
 import userController from "./controllers/user.controller";
 import authController from "./controllers/auth.controller";
 import clientController from "./controllers/client.controller";
@@ -8,26 +9,45 @@ import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
 import purchaseOrderController from "./controllers/purchase-order-item.controller";
 
-
-
 const app = express();
 
-app.use(cors({
-    origin: [
-        "http://localhost:4200",
-        "https://pixelarte-front.vercel.app"
-    ],
-    credentials: true
-}));
+/* =========================
+   CORS — CRÍTICO
+========================= */
+app.use(
+    cors({
+        origin: [
+            "http://localhost:4200",
+            "https://pixelarte-front.vercel.app", // 👈 URL exacta de Vercel
+        ],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    })
+);
+
+// 👉 Preflight (muy importante para POST /auth/login)
+app.options("*", cors());
+
+/* =========================
+   Middlewares
+========================= */
 app.use(express.json());
 
+/* =========================
+   Health check
+========================= */
 app.get("/health", (_, res) => {
     res.json({ status: "UP" });
 });
 
+/* =========================
+   Init DB + Routes
+========================= */
 AppDataSource.initialize()
-    .then(async () => {
+    .then(() => {
         console.log("✅ Base de datos conectada");
+
         app.use("/users", userController);
         app.use("/auth", authController);
         app.use("/clients", clientController);
@@ -37,7 +57,7 @@ AppDataSource.initialize()
 
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
-            console.log(`🔥 Server corriendo en http://localhost:${PORT}`);
+            console.log(`🔥 Server corriendo en puerto ${PORT}`);
         });
     })
     .catch((error) => {
