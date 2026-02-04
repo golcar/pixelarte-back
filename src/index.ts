@@ -1,4 +1,5 @@
 import express from "express";
+import { Request, Response } from "express";
 import cors from "cors";
 import { AppDataSource } from "./config/data-source";
 
@@ -30,7 +31,7 @@ app.use(express.json());
 /* =========================
    Health
 ========================= */
-app.get("/health", (_, res) => {
+app.get("/health", (_:Request, res:Response) => {
     res.json({ status: "UP" });
 });
 

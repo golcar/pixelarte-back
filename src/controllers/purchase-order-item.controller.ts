@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { validateDto } from "../middlewares/validate.dto";
 import { CreatePurchaseOrderDto } from "../dtos/create-purchase-order.dto";
 import { PurchaseOrderItemService } from "../services/purchase-order-item.service";
@@ -10,7 +10,7 @@ const service = new PurchaseOrderItemService();
 router.post(
     "/:purchaseOrderId/items",
     validateDto(CreatePurchaseOrderDto),
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             const purchaseOrderId = Number(req.params.purchaseOrderId);
             const result = await service.addItem(purchaseOrderId, req.body);
@@ -20,7 +20,7 @@ router.post(
         }
     }
 );
-router.get("/pending/:orderId", async (req, res) => {
+router.get("/pending/:orderId", async (req: Request, res: Response) => {
     try {
         const orderId = Number(req.params.orderId);
 
@@ -45,7 +45,7 @@ router.get("/pending/:orderId", async (req, res) => {
 router.patch(
     "/:purchaseOrderId/status",
     validateDto(UpdatePurchaseOrderStatusDto),
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             const purchaseOrderId = Number(req.params.purchaseOrderId);
             const { status } = req.body;
@@ -59,7 +59,7 @@ router.patch(
 );
 router.get(
     "/:orderId/items",
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             const orderId = Number(req.params.orderId);
             const result = await service.getItemsByOrder(orderId);
@@ -71,7 +71,7 @@ router.get(
 );
 router.delete(
     "/items/:itemId",
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         try {
             const itemId = Number(req.params.itemId);
             await service.deleteItem(itemId);

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { orderService } from "../services/order.service";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { validateDto } from "../middlewares/validate.dto";
@@ -6,7 +6,7 @@ import { CreateOrderDto } from "../dtos/create-order.dto";
 
 const router = Router();
 
-router.get("/", authMiddleware, async (_, res) => {
+router.get("/", authMiddleware, async (_:Request, res:Response) => {
     res.json(await orderService.findAll());
 });
 
@@ -14,7 +14,7 @@ router.post(
     "/",
     authMiddleware,
     validateDto(CreateOrderDto),
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         const order = await orderService.create(req.body);
         res.status(201).json(order);
     }
@@ -22,7 +22,7 @@ router.post(
 router.patch(
     "/:id/status",
     authMiddleware,
-    async (req, res) => {
+    async (req: Request, res: Response) => {
         const id = Number(req.params.id);
         const { status } = req.body;
 
