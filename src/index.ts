@@ -12,13 +12,13 @@ import purchaseOrderController from "./controllers/purchase-order-item.controlle
 const app = express();
 
 /* =========================
-   CORS — CRÍTICO
+   CORS — FORMA CORRECTA
 ========================= */
 app.use(
     cors({
         origin: [
             "http://localhost:4200",
-            "https://pixelarte-front.vercel.app", // 👈 URL exacta de Vercel
+            "https://pixelarte-front.vercel.app",
         ],
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -26,16 +26,13 @@ app.use(
     })
 );
 
-// 👉 Preflight (muy importante para POST /auth/login)
-app.options("/*", cors());
-
 /* =========================
    Middlewares
 ========================= */
 app.use(express.json());
 
 /* =========================
-   Health check
+   Health
 ========================= */
 app.get("/health", (_, res) => {
     res.json({ status: "UP" });
