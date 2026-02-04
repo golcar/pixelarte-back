@@ -27,7 +27,7 @@ app.use(
 );
 
 // 👉 Preflight (muy importante para POST /auth/login)
-app.options("*", cors());
+app.options("/*", cors());
 
 /* =========================
    Middlewares
