@@ -15,13 +15,36 @@ const app = express();
 /* =========================
    CORS — FORMA CORRECTA
 ========================= */
-app.use(cors({
-    origin: [
-        "http://localhost:4200",
-        "https://pixelarte-front.vercel.app"
-    ],
-    credentials: true
-}));
+
+const allowedOrigins = [
+    "http://localhost:4200",
+    "https://pixelarte-front.vercel.app",
+];
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            // Permitir requests sin origin (Postman, curl)
+            if (!origin) return callback(null, true);
+
+            // Permitir cualquier subdominio de vercel
+            if (origin.endsWith(".vercel.app")) {
+                return callback(null, true);
+            }
+
+            // Permitir orígenes explícitos
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+
+            return callback(new Error("Not allowed by CORS"));
+        },
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    })
+);
+
 
 /* =========================
    Middlewares
