@@ -16,7 +16,6 @@ class OrderService {
             throw new Error("Client not found");
         }
 
-        // 🔥 total se calcula en backend
         const total = dto.items.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
@@ -24,9 +23,10 @@ class OrderService {
 
         const order = this.orderRepo.create({
             client,
-            items: dto.items,   // JSON
+            items: dto.items,
             total,
             status: "NEW",
+            deliveryCommitmentDate: dto.deliveryCommitmentDate,
         });
 
         return this.orderRepo.save(order);
@@ -41,6 +41,7 @@ class OrderService {
             order: { id: "DESC" },
         });
     }
+
     async updateStatus(
         id: number,
         status: "NEW" | "IN_PROGRESS" | "FINISHED" | "DELIVERED"
@@ -51,7 +52,6 @@ class OrderService {
         order.status = status;
         return this.orderRepo.save(order);
     }
-
 }
 
 export const orderService = new OrderService();

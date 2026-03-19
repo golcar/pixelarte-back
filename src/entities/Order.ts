@@ -28,6 +28,7 @@ export class Order {
         price: number;
         description?: string;
     }[];
+
     // ======================
     // TOTAL
     // ======================
@@ -39,6 +40,12 @@ export class Order {
     // ======================
     @Column({ default: "NEW" })
     status!: "NEW" | "IN_PROGRESS" | "FINISHED" | "DELIVERED";
+
+    // ======================
+    // DELIVERY COMMITMENT DATE
+    // ======================
+    @Column({ type: "date", nullable: true })
+    deliveryCommitmentDate?: string;
 
     // ======================
     // DATE
