@@ -9,6 +9,7 @@ import clientController from "./controllers/client.controller";
 import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
 import purchaseOrderController from "./controllers/purchase-order-item.controller";
+import paymentController from "./controllers/payment.controller";
 
 const app = express();
 
@@ -48,6 +49,7 @@ AppDataSource.initialize()
         app.use("/products", productController);
         app.use("/orders", orderController);
         app.use("/purchase-orders", purchaseOrderController);
+        app.use("/payments", paymentController);
 
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {

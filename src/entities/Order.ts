@@ -3,8 +3,9 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     Column,
-    CreateDateColumn,
+    CreateDateColumn, OneToMany,
 } from "typeorm";
+import { Payment } from "./Payment";
 import { Client } from "./Client";
 
 @Entity()
@@ -52,4 +53,7 @@ export class Order {
     // ======================
     @CreateDateColumn()
     createdAt!: Date;
+
+    @OneToMany(() => Payment, (payment) => payment.order)
+    payments!: Payment[];
 }
