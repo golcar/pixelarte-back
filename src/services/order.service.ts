@@ -35,10 +35,32 @@ class OrderService {
     // ======================
     // READ
     // ======================
-    findAll() {
-        return this.orderRepo.find({
-            relations: ["client"],
+    async findAll() {
+        const orders = await this.orderRepo.find({
+            relations: ["client", "payments"],
             order: { id: "DESC" },
+        });
+
+        return orders.map((order) => {
+            const paid = (order.payments || []).reduce(
+                (sum, payment) => sum + Number(payment.amount),
+                0
+            );
+
+            const total = Number(order.total || 0);
+            const pending = total - paid;
+
+            let paymentStatus: "pending" | "partial" | "paid" = "pending";
+
+            if (paid > 0 && pending > 0) paymentStatus = "partial";
+            if (pending === 0 && total > 0) paymentStatus = "paid";
+
+            return {
+                ...order,
+                paid,
+                pending,
+                paymentStatus,
+            };
         });
     }
 
